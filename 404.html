@@ -1153,6 +1153,30 @@ tr:nth-child(2n+1) > td {
 </li>
 <li class="toc ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-jose-encoding" class="xref">JOSE Encoding</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-root-proof" class="xref">Root Proof</a><a href="#section-toc.1-1.4.2.1.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1.2.1">
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="xref">4.1.1</a>.  <a href="#name-decoded" class="xref">Decoded</a><a href="#section-toc.1-1.4.2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1.2.2">
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="xref">4.1.2</a>.  <a href="#name-encoded" class="xref">Encoded</a><a href="#section-toc.1-1.4.2.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-derived-proof" class="xref">Derived Proof</a><a href="#section-toc.1-1.4.2.2.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="xref">4.2.1</a>.  <a href="#name-decoded-2" class="xref">Decoded</a><a href="#section-toc.1-1.4.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="xref">4.2.2</a>.  <a href="#name-encoded-2" class="xref">Encoded</a><a href="#section-toc.1-1.4.2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="toc ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-cose-encoding" class="xref">COSE Encoding</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
@@ -1572,7 +1596,107 @@ This process is also referred to as generating a selective disclosure proof.<a h
       <h2 id="name-jose-encoding">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-jose-encoding" class="section-name selfRef">JOSE Encoding</a>
       </h2>
-<p id="section-4-1">//TODO<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="root-proof">
+<section id="section-4.1">
+        <h3 id="name-root-proof">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-root-proof" class="section-name selfRef">Root Proof</a>
+        </h3>
+<div id="decoded">
+<section id="section-4.1.1">
+          <h4 id="name-decoded">
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-decoded" class="section-name selfRef">Decoded</a>
+          </h4>
+<div class="artwork art-text alignLeft" id="section-4.1.1-1">
+<pre>{
+
+  // From JWP "Protected Header"
+  // always disclosed
+  "protected": {
+
+    "kid": "did:example:123#key-0"
+
+    "root": "SflKxwRJSM...",
+    "alg": "MDP+ES256+JP", // merkle disclosure with json pointer
+    "zip": "DEF"
+
+    "signature": "SflKxwRJSM", // over the entire protected header.
+  },
+
+  // From JWP "Payloads" and "Proof"
+  // selectively disclosed
+  "payloads": [ { message }, ...]
+  "proof": [ { path }, ... ],
+
+  // never disclosed
+  "nonce": "0IjoxNTE2MjM5..."
+
+}
+</pre><a href="#section-4.1.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="encoded">
+<section id="section-4.1.2">
+          <h4 id="name-encoded">
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-encoded" class="section-name selfRef">Encoded</a>
+          </h4>
+<div class="artwork art-text alignLeft" id="section-4.1.2-1">
+<pre>PROTECTED.PAYLOADS.PROOF.NONCE // base64url ( JSON.stringify )
+</pre><a href="#section-4.1.2-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="derived-proof">
+<section id="section-4.2">
+        <h3 id="name-derived-proof">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-derived-proof" class="section-name selfRef">Derived Proof</a>
+        </h3>
+<div id="decoded-1">
+<section id="section-4.2.1">
+          <h4 id="name-decoded-2">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-decoded-2" class="section-name selfRef">Decoded</a>
+          </h4>
+<div class="artwork art-text alignLeft" id="section-4.2.1-1">
+<pre>{
+
+  // From JWP "Protected Header"
+  // always disclosed
+  "protected": {
+
+    "kid": "did:example:123#key-0"
+
+    "root": "SflKxwRJSM...",
+    "alg": "MDP+ES256+JP", // merkle disclosure with json pointer
+    "zip": "DEF"
+
+    "signature": "SflKxwRJSM", // over the entire protected header.
+  },
+
+  // From JWP "Payloads" and "Proof"
+  // selectively disclosed
+  "payloads": [ { message }, ...]
+  "proof": [ { path }, ... ],
+}
+</pre><a href="#section-4.2.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="encoded-1">
+<section id="section-4.2.2">
+          <h4 id="name-encoded-2">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-encoded-2" class="section-name selfRef">Encoded</a>
+          </h4>
+<div class="artwork art-text alignLeft" id="section-4.2.2-1">
+<pre>PROTECTED.PAYLOADS.PROOF // base64url ( JSON.stringify )
+</pre><a href="#section-4.2.2-1" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2.2-2">//TODO<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="cose-encoding">
